@@ -1,0 +1,30 @@
+ACTION=="remove", GOTO="ubuntu_core_partitions_end"
+SUBSYSTEM!="block", GOTO="ubuntu_core_partitions_end"
+
+ENV{DEVTYPE}=="partition", GOTO="ubuntu_core_partitions_partition"
+ENV{DEVTYPE}=="disk", GOTO="ubuntu_core_partitions_disk"
+GOTO="ubuntu_core_partitions_end"
+
+# Disk
+LABEL="ubuntu_core_partitions_disk"
+
+IMPORT{program}="detect-ubuntu-disk"
+ENV{UBUNTU_CORE_BOOT_DISK}=="1", SYMLINK+="ubuntu/disk"
+
+GOTO="ubuntu_core_partitions_end"
+
+# Partition
+LABEL="ubuntu_core_partitions_partition"
+
+IMPORT{parent}="UBUNTU_CORE_BOOT_DISK"
+
+ENV{UBUNTU_CORE_BOOT_DISK}!="1", GOTO="ubuntu_core_partitions_end"
+
+ENV{ID_PART_ENTRY_NAME}=="ubuntu-seed", SYMLINK+="ubuntu/seed"
+ENV{ID_PART_ENTRY_NAME}=="ubuntu-boot", SYMLINK+="ubuntu/boot"
+ENV{ID_PART_ENTRY_NAME}=="ubuntu-data", ENV{ID_FS_TYPE}!="crypto_LUKS", SYMLINK+="ubuntu/data"
+ENV{ID_PART_ENTRY_NAME}=="ubuntu-data", ENV{ID_FS_TYPE}=="crypto_LUKS", SYMLINK+="ubuntu/data-luks"
+ENV{ID_PART_ENTRY_NAME}=="ubuntu-save", ENV{ID_FS_TYPE}!="crypto_LUKS", SYMLINK+="ubuntu/save"
+ENV{ID_PART_ENTRY_NAME}=="ubuntu-save", ENV{ID_FS_TYPE}=="crypto_LUKS", SYMLINK+="ubuntu/save-luks"
+
+LABEL="ubuntu_core_partitions_end"

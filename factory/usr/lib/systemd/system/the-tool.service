@@ -7,6 +7,8 @@ After=systemd-modules-load.service
 Wants=systemd-modules-load.service
 After=systemd-udev-settle.service
 Wants=systemd-udev-settle.service
+BindsTo=dev-ubuntu-disk.device
+After=dev-ubuntu-disk.device
 
 [Service]
 Type=oneshot
