@@ -7,8 +7,8 @@ DefaultDependencies=no
 After=sysinit.target
 Before=initrd-root-device.target
 
-BindsTo=dev-ubuntu-seed.device
-After=dev-ubuntu-seed.device
+BindsTo=dev-ubuntu-disk.device
+After=dev-ubuntu-disk.device
 
 [Service]
 Type=oneshot
